@@ -1,0 +1,4 @@
+Type of error: NameError
+File path: /Users/student/.rvm/rubies/ruby-2.6.0/lib/ruby/gems/2.6.0/gems/irb-1.0.0/exe/irb
+Line number: 1
+Solving the error: define a class named DockingStation
