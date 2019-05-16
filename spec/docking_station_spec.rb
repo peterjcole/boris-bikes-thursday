@@ -38,4 +38,8 @@ describe DockingStation do
   it "should have capacity to dock 20 bikes" do
     expect { 20.times { subject.dock(Bike.new) } }.not_to raise_error
   end
+
+  it "should raise error if more than 20 bikes" do
+    expect { 21.times { subject.dock(Bike.new) } }.to raise_error(RuntimeError)
+  end
 end

@@ -11,6 +11,6 @@ class DockingStation
   end
 
   def dock(bike)
-    @docked.length < 21 ? @docked.push(bike) : raise { RuntimeError.new }
+    @docked.length < 20 ? @docked.push(bike) : raise { RuntimeError.new }
   end
 end
