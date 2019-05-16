@@ -22,16 +22,20 @@ describe DockingStation do
   it 'should store a bike that\'s been docked' do
     subject.dock(pedalo)
 
-    expect(subject.docked).to eq(pedalo)
+    expect(subject.docked).to include(pedalo)
   end
 
   it "should not return a bike if there are none available" do
     expect { subject.release_bike }.to raise_error(RuntimeError)
   end
 
-  it "should not allow second bike to be docked" do
+  it "should allow second bike to be docked" do
     subject.dock(bike)
     
-    expect { subject.dock(pedalo) }.to raise_error(RuntimeError)
+    expect { subject.dock(pedalo) }.not_to raise_error
+  end
+
+  it "should have capacity to dock 20 bikes" do
+    expect { 20.times { subject.dock(Bike.new) } }.not_to raise_error
   end
 end
