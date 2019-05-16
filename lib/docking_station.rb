@@ -7,7 +7,7 @@ class DockingStation
   end
 
   def release_bike
-    return @docked.empty? ? raise { RuntimeError.new } : @docked[0]
+    return @docked.empty? ? raise { RuntimeError.new } : @docked.shift
   end
 
   def dock(bike)
