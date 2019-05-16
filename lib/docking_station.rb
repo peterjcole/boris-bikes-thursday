@@ -1,6 +1,7 @@
 require_relative "bike.rb"
 
 class DockingStation
+  DEFAULT_CAPACITY = 20
   attr_reader :docked
 
   def initialize
@@ -18,6 +19,6 @@ class DockingStation
   private
 
   def full?
-    true if @docked.length == 20
+    true if @docked.length == DEFAULT_CAPACITY
   end
 end
