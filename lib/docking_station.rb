@@ -4,7 +4,7 @@ class DockingStation
   attr_reader :docked
 
   def release_bike
-    return Bike.new
+    return @docked ? @docked : raise { RuntimeError.new }
   end
 
   def dock(bike)
