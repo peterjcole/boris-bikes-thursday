@@ -1,4 +1,4 @@
-require_relative 'bike.rb'
+require_relative "bike.rb"
 
 class DockingStation
   attr_reader :docked
@@ -8,6 +8,6 @@ class DockingStation
   end
 
   def dock(bike)
-    @docked = bike
+    @docked == nil ? @docked = bike : raise { RuntimeError.new }
   end
 end
