@@ -10,11 +10,22 @@ class DockingStation
   end
 
   def release_bike
-    return @docked.empty? ? raise { RuntimeError.new } : @docked.shift
+    if @docked.any? { |bike| bike.working? == true } && @docked.empty? == false
+      bike = @docked.find { |bike| bike.working? == true }
+      @docked.delete(bike)
+      return bike
+    else
+      fail RuntimeError.new("No bikes available")
+    end
   end
 
-  def dock(bike)
-    full? ? raise { RuntimeError.new } : @docked.push(bike)
+  def dock(bike, broken = false)
+    bike.broken = true if broken == true
+    if full?
+      fail RuntimeError.new("Station over capacity")
+    else
+      @docked.push(bike)
+    end
   end
 
   private
