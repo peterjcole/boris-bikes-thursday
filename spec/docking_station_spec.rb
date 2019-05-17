@@ -47,4 +47,18 @@ describe DockingStation do
     2.times { subject.dock(Bike.new) }
     expect { 3.times { subject.release_bike } }.to raise_error(RuntimeError)
   end
+
+  context 'initialising with capacity provided as argument' do
+    it 'should be able to be instantiated when providing a capacity' do
+      expect(DockingStation.new(15)).to be_a(DockingStation)
+    end
+    it 'should have the capacity provided when initializing' do
+      station = DockingStation.new(30)
+      30.times { station.dock(Bike.new) }
+      expect { station.dock(Bike.new) }.to raise_error(RuntimeError)
+
+    end
+
+  end
+
 end
