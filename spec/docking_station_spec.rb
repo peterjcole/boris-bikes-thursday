@@ -1,11 +1,10 @@
 require "docking_station.rb"
 
 describe DockingStation do
-  # it 'responds to release_bike' do
-  #   expect(DockingStation).to respond_to :release_bike
-  # end
-  let(:bike) { double(:bike) }
-  let(:pedalo) { double(:bike) }
+
+  let(:bike) { double(:bike, :working? => true) }
+  let(:pedalo) { double(:bike, :working? => true) }
+  let(:halfords_bike) { double(:bike, :working? => false) }
 
   it { should respond_to :release_bike }
 
@@ -62,7 +61,7 @@ describe DockingStation do
     end
   end
 
-  context 'returning broken bikes' do
+  context 'when returning broken bikes' do
     it 'should not release a bike if there are only broken bikes docked' do
       subject.dock(double(:bike, :working? => true))
       subject.dock(double(:bike, :working? => false))
@@ -73,12 +72,32 @@ describe DockingStation do
     end
 
     it 'should release working bikes only' do
-      subject.dock(double(:bike, :working? => true))
-      subject.dock(double(:bike, :working? => false))
-      subject.dock(double(:bike, :working? => true))
+      subject.dock(bike)
+      subject.dock(halfords_bike)
+      subject.dock(pedalo)
       released_bikes = []
       2.times { released_bikes.push(subject.release_bike) }
       expect(released_bikes.all? { |bike| bike.working? } ).to be true
+    end
+  end
+
+  context 'when releasing broken bikes' do
+    it 'should release an array of all broken bikes' do
+      subject.dock(halfords_bike)
+      subject.dock(bike)
+      subject.dock(pedalo)
+
+      expect(subject.release_broken).to eq([halfords_bike])
+
+    end
+
+    it 'should not contain broken bikes after releasing' do
+      subject.dock(halfords_bike)
+      subject.dock(bike)
+      subject.dock(pedalo)
+      subject.release_broken
+      expect(subject.docked).to satisfy { |bikes| bikes.each { |bike| bike.working? } }
+
     end
   end
 end

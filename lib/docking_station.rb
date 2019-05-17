@@ -28,6 +28,12 @@ class DockingStation
     end
   end
 
+  def release_broken
+    broken = @docked.select { |bike| bike.working? == false }
+    @docked.delete_if { |bike| bike.working? == false }
+    return broken
+  end
+
   private
 
   def full?
