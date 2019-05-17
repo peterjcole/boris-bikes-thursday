@@ -17,12 +17,12 @@ describe DockingStation do
 
   it { should respond_to(:dock).with(1).argument }
 
-  it { should respond_to :docked }
+  it { should respond_to :bikes }
 
   it 'should store a bike that\'s been docked' do
     subject.dock(pedalo)
 
-    expect(subject.docked).to include(pedalo)
+    expect(subject.bikes).to include(pedalo)
   end
 
   it "should not return a bike if there are none available" do
@@ -96,7 +96,7 @@ describe DockingStation do
       subject.dock(bike)
       subject.dock(pedalo)
       subject.release_broken
-      expect(subject.docked).to satisfy { |bikes| bikes.each { |bike| bike.working? } }
+      expect(subject.bikes).to satisfy { |bikes| bikes.each { |bike| bike.working? } }
 
     end
   end

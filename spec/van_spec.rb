@@ -23,7 +23,7 @@ describe 'van' do
   context 'delivering bikes' do
     it "returns all bikes" 
     it "doesn't contain bikes after delivering" do
-      van.pick_up(station)
+      van.take_from(station)
       van.deliver_to(garage)
       expect(van.bikes).to be_empty
     end

@@ -1,18 +1,19 @@
 require_relative "bike.rb"
 
 class DockingStation
-  attr_reader :docked
+  include BikeContainer
+  attr_reader :bikes
   DEFAULT_CAPACITY = 20
 
   def initialize(capacity = DEFAULT_CAPACITY)
-    @docked = []
+    @bikes = []
     @capacity = capacity
   end
 
   def release_bike
-    if @docked.any? { |bike| bike.working? == true } && @docked.empty? == false
-      bike = @docked.find { |bike| bike.working? == true }
-      @docked.delete(bike)
+    if @bikes.any? { |bike| bike.working? == true } && @bikes.empty? == false
+      bike = @bikes.find { |bike| bike.working? == true }
+      @bikes.delete(bike)
       return bike
     else
       fail RuntimeError.new("No bikes available")
@@ -24,19 +25,19 @@ class DockingStation
     if full?
       fail RuntimeError.new("Station over capacity")
     else
-      @docked.push(bike)
+      @bikes.push(bike)
     end
   end
 
   def release_broken
-    broken = @docked.select { |bike| bike.working? == false }
-    @docked.delete_if { |bike| bike.working? == false }
+    broken = @bikes.select { |bike| bike.working? == false }
+    @bikes.delete_if { |bike| bike.working? == false }
     return broken
   end
 
   private
 
   def full?
-    true if @docked.length == @capacity
+    true if @bikes.length == @capacity
   end
 end
