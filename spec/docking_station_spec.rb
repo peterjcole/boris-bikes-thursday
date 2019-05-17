@@ -4,12 +4,13 @@ describe DockingStation do
   # it 'responds to release_bike' do
   #   expect(DockingStation).to respond_to :release_bike
   # end
-  let(:bike) { Bike.new }
-  let(:pedalo) { Bike.new }
+  let(:bike) { double(:bike) }
+  let(:pedalo) { double(:bike) }
 
   it { should respond_to :release_bike }
 
   it "should return a working bike" do
+    allow(bike).to receive(:working?).and_return(true)
     subject.dock(bike)
     bike = subject.release_bike
     expect(bike).to be_working
@@ -36,15 +37,16 @@ describe DockingStation do
   end
 
   it "should have capacity to dock 20 bikes" do
-    expect { DockingStation::DEFAULT_CAPACITY.times { subject.dock(Bike.new) } }.not_to raise_error
+    expect { DockingStation::DEFAULT_CAPACITY.times { subject.dock(double(:bike)) } }.not_to raise_error
   end
 
   it "should raise error if more than 20 bikes" do
-    expect { (DockingStation::DEFAULT_CAPACITY + 1).times { subject.dock(Bike.new) } }.to raise_error(RuntimeError, "Station over capacity")
+    expect { (DockingStation::DEFAULT_CAPACITY + 1).times { subject.dock(double(:bike)) } }.to raise_error(RuntimeError, "Station over capacity")
   end
 
   it "should raise error if no bikes available after bikes have been docked and then released" do
-    2.times { subject.dock(Bike.new) }
+    2.times { subject.dock(double(:bike, :working? => true)) }
+    
     expect { 3.times { subject.release_bike } }.to raise_error(RuntimeError, "No bikes available")
   end
 
@@ -54,16 +56,16 @@ describe DockingStation do
     end
     it 'should have the capacity which was provided when initializing' do
       station = DockingStation.new(30)
-      30.times { station.dock(Bike.new) }
-      expect { station.dock(Bike.new) }.to raise_error(RuntimeError, "Station over capacity")
+      30.times { station.dock(double(:bike)) }
+      expect { station.dock(double(:bike)) }.to raise_error(RuntimeError, "Station over capacity")
 
     end
   end
 
   context 'returning broken bikes' do
     it 'should not release a bike if there are only broken bikes docked' do
-      subject.dock(Bike.new)
-      subject.dock(Bike.new, true)
+      subject.dock(double(:bike, :working? => true))
+      subject.dock(double(:bike, :working? => false))
 
       subject.release_bike
 
@@ -71,9 +73,9 @@ describe DockingStation do
     end
 
     it 'should release working bikes only' do
-      subject.dock(Bike.new, false)
-      subject.dock(Bike.new, true)
-      subject.dock(Bike.new, false)
+      subject.dock(double(:bike, :working? => true))
+      subject.dock(double(:bike, :working? => false))
+      subject.dock(double(:bike, :working? => true))
       released_bikes = []
       2.times { released_bikes.push(subject.release_bike) }
       expect(released_bikes.all? { |bike| bike.working? } ).to be true
